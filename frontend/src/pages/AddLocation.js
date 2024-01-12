@@ -12,8 +12,12 @@ import AppContext from '../utils/AppContext';
 export default function AddLocation() {
   useAuth();
   return (
-    <div className="text-black dark:text-white lg:p-10">
-      Add Location Page
+    <div className="text-black dark-text-white">
+      <div className="h-screen  overflow-hidden left-0 fixed w-full">
+        <div className="absoulte top-0 h-full">
+          <MapComponent />
+        </div>
+      </div>
     </div>
   );
 }
