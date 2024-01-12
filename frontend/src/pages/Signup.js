@@ -9,12 +9,14 @@ import ButtonLoader from '../components/ButtonLoader';
 import Autocomplete from '../components/Autocomplete';
 
 function Signup() {
+  // Access global state
   const {
     isLoggedIn,
   } = useContext(AppContext);
-
+  // Navigation hook
   const navigate = useNavigate();
 
+  // State variables
   const [userDetails, setUserDetails] = useState({
     username: '',
     password: '',
@@ -27,25 +29,29 @@ function Signup() {
   const [inputError, setInputError] = useState('');
   const [loading, setLoading] = useState(false);
 
-
+  // Handle input change
   const handleInputChange = (name, value) => {
     setInputError('');
     setUserDetails((prev) => ({ ...prev, [name]: value }));
   };
 
+  // handle add current location 
   const handleAddCurrentLocation = (name, latitude, longitude) => {
     setUserDetails((prev) => ({ ...prev, currentLocation: { name, latitude, longitude } }));
   }
 
+  // Handle signup submission
   const handleSignup = async (e) => {
     setLoading(true);
     e.preventDefault();
     setInputError('');
 
+    // Destructure user details
     const {
       username, password, gender, currentLocation
     } = userDetails;
 
+    // Validation checks
     if (!username.trim()) {
       setInputError('Please enter a username');
       setLoading(false);
@@ -62,6 +68,7 @@ function Signup() {
       return;
     }
 
+    // Final validation check
     if (!username.trim() || !password.trim() || !gender) {
       setInputError('Please fill in required fields');
       setLoading(false);
@@ -69,16 +76,19 @@ function Signup() {
     }
 
     try {
+      // Make signup request
       const response = await axios.post(`${serverURL}/auth/signup`, {
         username,
         password,
         gender,
         currentLocation
       });
+      // Display success message, reset state, and navigate to signin
       toast.success(response?.data?.message);
       setLoading(false);
       navigate('/signin');
     } catch (error) {
+      // Handle signup error, display error message
       const responseError = error?.response?.data?.message;
       toast.error(responseError || error.message);
       setLoading(false);
@@ -86,7 +96,7 @@ function Signup() {
     }
   };
 
-
+  // Redirect to profile page if already logged in
   useEffect(() => {
     if (isLoggedIn) {
       navigate('/profile');
