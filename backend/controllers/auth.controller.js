@@ -9,7 +9,7 @@ const expiresIn = '1h'; // Token expiration time
 exports.signup = async (req, res) => {
   try {
     const {
-      username, password, gender
+      username, password, gender, currentLocation
     } = req.body;
 
     // check if username already exists
@@ -31,6 +31,7 @@ exports.signup = async (req, res) => {
     const newUser = new User({
       username,
       password: hashedPassword,
+      currentLocation,
       gender,
       profileBanner: avatar,
     });
