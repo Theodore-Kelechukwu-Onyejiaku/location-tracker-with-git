@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const axios = require('axios');
 const User = require('../model/User.model');
 require('dotenv').config();
 
@@ -25,17 +24,15 @@ exports.signup = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // get random user picture
-    const randomUser = await axios.get(`https://randomuser.me/api/?gender=${gender}`);
-    const { data: { results } } = await randomUser;
-    const randomUserPicture = results[0]?.picture?.medium;
+    // get avatar
+    const avatar = "https://img.icons8.com/?size=160&id=492ILERveW8G&format=png"
 
     // create a new user
     const newUser = new User({
       username,
       password: hashedPassword,
       gender,
-      profileBanner: randomUserPicture,
+      profileBanner: avatar,
     });
 
     // save the user to the database

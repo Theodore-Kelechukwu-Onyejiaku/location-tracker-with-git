@@ -25,7 +25,7 @@ export default function Profile() {
 
         <div>
           <div className="flex justify-center my-3">
-            <img className="w-12 h-12 rounded-full" src={authUser.profileBanner} alt="profile" />
+            <img className="w-14 h-14 rounded-full" src={authUser.profileBanner} alt="profile" />
           </div>
           <div className="flex justify-center">
             <div className="mx-3 flex flex-col w-full  sm:w-[300px]  space-y-4">
