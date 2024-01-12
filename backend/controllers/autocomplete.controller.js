@@ -13,12 +13,12 @@ exports.autocomplete = async (req, res) => {
         const response = await geocoder.geocode(searchKey);
 
         res.status(200).json({
-            message: '',
+            message: 'location(s) found!',
             data: response,
         });
     } catch (error) {
         res.status(500).json({
-            message: 'Error getting location',
+            message: error.message,
             data: null,
         });
     }
