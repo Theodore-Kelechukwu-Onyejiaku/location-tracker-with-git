@@ -8,10 +8,11 @@ import AppContext from "../utils/AppContext";
 import serverURL from "../utils/urls";
 
 export default function Autocomplete({ onAddLocation }) {
-    const [locations, setLocations] = useState([]);
-    const [locationInput, setLocationInput] = useState('');
-    const [inputTimer, setInputTimer] = useState(null);
-    const [autoCompleteerror, setAutoCompleteError] = useState('');
+    // State variables
+    const [locations, setLocations] = useState([]); // Array to store autocomplete suggestions
+    const [locationInput, setLocationInput] = useState(""); // User input for location search
+    const [inputTimer, setInputTimer] = useState(null); // Timer for input debounce
+    const [autoCompleteerror, setAutoCompleteError] = useState(""); // Error message for autocomplete
 
     const autocomplete = async (searchKey) => {
         try {
