@@ -22,7 +22,6 @@ export default function Profile() {
   return (
     <div className="pt-5 bg-white dark:bg-black dark:text-white">
       <div className=" p-10">
-
         <div>
           <div className="flex justify-center my-3">
             <img className="w-14 h-14 rounded-full" src={authUser.profileBanner} alt="profile" />
@@ -62,7 +61,7 @@ export default function Profile() {
           <Link to="/my-locations" className="primary-button w-full flex justify-between items-center sm:w-[150px] border rounded-md border-green-500 p-5 text-sm">
             Locations:
             <span className="text-green-500">
-              {/* Number of locations here */}
+              {authUser?.locations?.length}
             </span>
             <BsArrowUpRight className="text-green-500" />
           </Link>

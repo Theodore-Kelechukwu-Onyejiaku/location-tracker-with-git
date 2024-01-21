@@ -11,10 +11,41 @@ import AppContext from '../utils/AppContext';
 
 export default function AddLocation() {
   useAuth();
-  
+
+  const navigate = useNavigate();
+  const {
+    isLoggedIn,
+  } = useContext(AppContext);
+
   const handleAddLocation = async (name, latitude, longitude) => {
-    console.log(name, latitude, longitude);
-  }
+    const authToken = Cookies.get('authToken');
+
+    if (!isLoggedIn) {
+      toast.error('Please login to add a new location!');
+      return;
+    }
+    try {
+      const { data } = await axios.post(
+        `${serverURL}/locations/add`,
+        {
+          name, latitude, longitude,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      );
+      toast.success(data.message);
+      navigate('/my-locations');
+    } catch (error) {
+      const responseError = error?.response?.data?.message;
+      toast.error(responseError || error.message);
+    }
+  };
+
+
   return (
     <div className="">
       <div className="h-screen  overflow-hidden left-0 fixed w-full">
