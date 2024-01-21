@@ -59,7 +59,7 @@ exports.editLocation = async (req, res) => {
             { _id, 'locations._id': locationId },
             {
                 $set: {
-                    locations: { name: newLocationName }
+                    'locations.$.name': newLocationName,
                 }
             },
             { new: true }
