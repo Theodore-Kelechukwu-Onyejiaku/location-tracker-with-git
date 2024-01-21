@@ -6,5 +6,6 @@ const { authMiddleware } = require('../middlewares/auth.middleware');
 const router = express.Router();
 
 router.post('/add', authMiddleware, addLocation);
+router.put('/edit', authMiddleware, editLocation);
 
 module.exports = router;
