@@ -3,7 +3,7 @@ const User = require('../model/User.model');
 
 exports.addLocation = async (req, res) => {
     try {
-        // extract location details from user
+        // extract location details from request body
         const { name, latitude, longitude } = req.body;
         // extract user's id
         const { _id } = req.user;
@@ -52,9 +52,12 @@ exports.addLocation = async (req, res) => {
 
 exports.editLocation = async (req, res) => {
     try {
+        // extract user's id
         const { _id } = req.user;
+        // extract location details from request body
         const { id: locationId, name: newLocationName } = req.body;
 
+        // update user with new location details
         const location = await User.findOneAndUpdate(
             { _id, 'locations._id': locationId },
             {
@@ -65,6 +68,7 @@ exports.editLocation = async (req, res) => {
             { new: true }
         );
 
+        // if location is not found
         if (!location) {
             return res.status(404).json({
                 message: 'Location not found',
@@ -84,8 +88,45 @@ exports.editLocation = async (req, res) => {
     }
 };
 
-exports.getLocationCsvData = async (req, res) => { }
+exports.deleteLocation = async (req, res) => {
+    try {
+        // extract user's id
+        const { _id } = req.user;
+        // extract location details from request body
+        const { id: locationId } = req.body;
 
-exports.deleteLocation = async (req, res) => { }
+        // update user with new location details
+        const location = await User.findOneAndUpdate(
+            { _id, 'locations._id': locationId },
+            {
+                $pull: {
+                    locations: { _id: locationId }
+                }
+            },
+            { new: true }
+        );
+
+        // if location is not found
+        if (!location) {
+            return res.status(404).json({
+                message: 'Location not found',
+                data: null,
+            });
+        }
+
+        res.status(200).json({
+            message: 'Location deleted successfully!',
+            data: location,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+            data: null,
+        });
+    }
+};
+
+
+exports.getLocationCsvData = async (req, res) => { }
 
 exports.getUser = async (req, res) => { }
