@@ -52,10 +52,13 @@ exports.addLocation = async (req, res) => {
 
 exports.editLocation = async (req, res) => {
     try {
+        // extract user's id
         const { _id } = req.user;
+        // extract location details from request body
         const { id: locationId, name: newLocationName } = req.body;
 
-        const location = await User.findOneAndUpdate(
+        // update user with new location details
+        const updatedUser = await User.findOneAndUpdate(
             { _id, 'locations._id': locationId },
             {
                 $set: {
@@ -65,7 +68,8 @@ exports.editLocation = async (req, res) => {
             { new: true }
         );
 
-        if (!location) {
+        // if location is not found
+        if (!updatedUser) {
             return res.status(404).json({
                 message: 'Location not found',
                 data: null,
