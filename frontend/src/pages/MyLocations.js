@@ -10,10 +10,61 @@ import downloadMap from "../utils/downloadmap";
 
 
 export default function MyLocations() {
+  const [open, setOpen] = useState(false);
+  const [locationId, setLocationId] = useState('');
+  const [newLocationName, setNewLocationName] = useState('');
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  const handleSelectLocationForUpdate = (location) => {
+    setOpen(true);
+    setLocationId(location._id);
+    setNewLocationName(location.name);
+  };
+
+  const handleInputChange = (e) => {
+    setNewLocationName(e.target.value);
+  };
+
+  const handleLocationUpdate = async (e) => {
+    e.preventDefault();
+    const authToken = Cookies.get('authToken');
+
+    try {
+      const { data } = await axios.put(
+        `${serverURL}/locations/edit`,
+        {
+          id: locationId,
+          name: newLocationName,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      );
+      toast.success(data.message);
+      window.location.reload(true);
+    } catch (error) {
+      const responseError = error?.response?.data?.message;
+      toast.error(responseError || error.message);
+    }
+  };
+
   return (
     <div className="">
       <div className="text-black dark:text-white lg:p-10">
-        <MyLocationsDetails />
+        <EditLocationModal
+          open={open}
+          handleCloseModal={handleCloseModal}
+          newLocationName={newLocationName}
+          handleInputChange={handleInputChange}
+          handleLocationUpdate={handleLocationUpdate}
+        />
+        <MyLocationsDetails handleSelectLocationForUpdate={handleSelectLocationForUpdate}/>
       </div>
     </div>
   );

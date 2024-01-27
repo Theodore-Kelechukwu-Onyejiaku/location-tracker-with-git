@@ -4,7 +4,7 @@ import { FaTrash, FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
-export default function MyLocationsMap() {
+export default function MyLocationsMap({ handleSelectLocationForUpdate }) {
   const { authUser } = useAuth();
   const [locations, setLocations] = useState([]);
 
@@ -59,6 +59,7 @@ export default function MyLocationsMap() {
                           {' '}
                         </button>
                         <button
+                          onClick={()=>{handleSelectLocationForUpdate(location)}}
                           type="button"
                           className="primary-button p-2 rounded-md flex items-center space-x-2 border border-green-500 cursor-pointer"
                         >
