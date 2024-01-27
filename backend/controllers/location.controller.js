@@ -58,27 +58,27 @@ exports.editLocation = async (req, res) => {
         const { id: locationId, name: newLocationName } = req.body;
 
         // update user with new location details
-        const location = await User.findOneAndUpdate(
-            { _id, 'locations._id': locationId },
+        const updatedUser = await User.findOneAndUpdate(
+            { _id, "locations._id": locationId },
             {
                 $set: {
-                    locations: { name: newLocationName }
-                }
+                    "locations.$.name": newLocationName,
+                },
             },
-            { new: true }
+            { new: true },
         );
 
         // if location is not found
-        if (!location) {
+        if (!updatedUser) {
             return res.status(404).json({
-                message: 'Location not found',
+                message: "Location not found",
                 data: null,
             });
         }
 
         res.status(200).json({
-            message: 'Location updated successfully',
-            data: location,
+            message: "Location updated successfully",
+            data: updatedUser,
         });
     } catch (error) {
         res.status(500).json({
