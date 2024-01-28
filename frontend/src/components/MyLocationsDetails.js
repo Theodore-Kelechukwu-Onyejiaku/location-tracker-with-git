@@ -1,12 +1,62 @@
-import { MapContainer, TileLayer } from "react-leaflet";
-import { useEffect, useState } from "react";
-import { FaTrash, FaEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import {
+  MapContainer, Marker, Popup, TileLayer, Polygon,
+} from 'react-leaflet';
+import Leaflet from 'leaflet';
+import { useEffect, useState } from 'react';
+import {
+  FaFileCsv, FaTrash, FaFileDownload, FaEdit,
+} from 'react-icons/fa';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import serverURL from '../utils/urls';
+import getCsvData from '../utils/csv';
+import useAuth from '../hooks/useAuth';
+import downloadMap from '../utils/downloadmap';
 
-export default function MyLocationsMap({ handleSelectLocationForUpdate }) {
+export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
+  // get authenticated user from custom hook effect
   const { authUser } = useAuth();
+
+  // create state variables
   const [locations, setLocations] = useState([]);
+
+  // function to handle the deletion of a user's location
+  const handleDeleteLocation = async (locationToDelete) => {
+    // get a cookie value
+    const authToken = Cookies.get('authToken');
+
+    try {
+      await axios.delete(
+        `${serverURL}/locations/delete`,
+        {
+          data: {
+            id: locationToDelete?._id
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      );
+
+      // filter out the deleted location
+      const updatedLocations = locations.filter(
+        (location) => location._id !== locationToDelete?._id
+      );
+
+      // update the locations state variable
+      setLocations(updatedLocations);
+
+      // display success message
+      toast.success('Location deleted successfully!');
+    } catch (error) {
+      const responseError = error?.response?.data?.message;
+      toast.error(responseError || error.message);
+    }
+  };
+
 
   useEffect(() => {
     const userLocations = authUser?.locations || [];
@@ -45,13 +95,14 @@ export default function MyLocationsMap({ handleSelectLocationForUpdate }) {
                         <span className="text-green-500">lat:</span>
                         <span className="ml-2">{location?.latitude}</span>
                         <span className="ml-5 text-green-500">long:</span>
-                        <span className="ml-2">{location?.latitude}</span>
+                        <span className="ml-2">{location?.longitude}</span>
                       </div>
                     </div>
 
                     <div className="h-1/4">
                       <div className="flex justify-between items-center w-full left-0 absolute bottom-0">
                         <button
+                          onClick={() => { handleDeleteLocation(location) }}
                           type="button"
                           className="primary-button p-2 rounded-md flex items-center space-x-2 border border-red-500 cursor-pointer"
                         >
@@ -59,7 +110,7 @@ export default function MyLocationsMap({ handleSelectLocationForUpdate }) {
                           {' '}
                         </button>
                         <button
-                          onClick={()=>{handleSelectLocationForUpdate(location)}}
+                          onClick={() => { handleSelectLocationForUpdate(location) }}
                           type="button"
                           className="primary-button p-2 rounded-md flex items-center space-x-2 border border-green-500 cursor-pointer"
                         >

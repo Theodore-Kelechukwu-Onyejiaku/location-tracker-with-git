@@ -9,6 +9,9 @@ export default function Profile() {
   const { isLoggedIn, authUser } = useAuth();
   const navigate = useNavigate();
 
+  // create a state variable
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     if (!isLoggedIn) {
       navigate('/signin');
@@ -68,7 +71,31 @@ export default function Profile() {
         </div>
         <div className="flex justify-center items-center my-7 h-fit">
           <button type="button" className='p-5 border border-green-500'>
-            <span>share location</span>
+            <CopyToClipboard
+              text={`${window.location.href}/${authUser?.username}`}
+              className=""
+              onCopy={() => {
+                setCopied(true);
+                toast.success('Link copied to clipboard!', {
+                  position: "top-center",
+                  autoClose: false,
+                  hideProgressBar: false,
+                  closeOnClick: false,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+              }}
+            >
+              <div>
+                {
+                  copied
+                    ? <span className="text-green-500 inline-block w-[142px]">copied!</span>
+                    : <span className='inline-block w-[142px]'>share location</span>
+                }
+              </div>
+            </CopyToClipboard>
           </button>
         </div>
       </div>
