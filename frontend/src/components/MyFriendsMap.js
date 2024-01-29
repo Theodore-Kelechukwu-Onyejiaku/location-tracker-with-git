@@ -7,11 +7,10 @@ import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import Leaflet from "leaflet";
 import { toast } from "react-toastify";
-import { FaFileCsv, FaFileDownload } from "react-icons/fa";
+import { FaFileCsv } from "react-icons/fa";
 import serverURL from "../utils/urls";
 import useAuth from "../hooks/useAuth";
 import getCsvData from "../utils/csv";
-import downloadMap from "../utils/downloadmap";
 import DownloadMap from "../utils/downloadmap";
 
 export default function MyFriendsMap() {
@@ -91,12 +90,6 @@ export default function MyFriendsMap() {
         <p className="my-3 lg:my-7">Your friends and their locations</p>
         <div className="relative">
           <div className="absolute z-50 right-0 flex">
-            <button
-              type="button"
-              onClick={() => { downloadMap('friendsMap'); }}
-            >
-              <FaFileDownload size={24} />
-            </button>
             <button
               type="button"
               onClick={() => { getCsvData('friends'); }}
