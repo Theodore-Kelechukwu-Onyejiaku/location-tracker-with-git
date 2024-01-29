@@ -9,5 +9,6 @@ router.post('/add', authMiddleware, addLocation);
 router.put('/edit', authMiddleware, editLocation);
 router.delete('/delete', authMiddleware, deleteLocation);
 router.get('/user/:username', getUser);
+router.get('/csv-data', authMiddleware, getLocationCsvData);
 
 module.exports = router;

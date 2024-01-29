@@ -21,6 +21,12 @@ export default function UserLocation() {
   // invoke the custom authentication hook
   useAuth();
 
+  // create custom marker
+  const markerIcon = new Leaflet.Icon({
+    iconUrl: userDetails?.profileBanner,
+    iconSize: [40, 40],
+  });
+
   useEffect(() => {
     // create the getUser function
     const getUser = async () => {
@@ -61,6 +67,39 @@ export default function UserLocation() {
                     <span className="text-green-500">{userDetails?.locations?.length}</span>{" "}
                     place(s).
                   </p>
+                </div>
+                <div className="h-5/6">
+                  <MapContainer placeholder center={[6.5244, 3.3792]} zoom={3} scrollWheelZoom className=" bg-black h-3/4  leaflet-container">
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker
+                      key={userDetails?._id}
+                      className="text-white dark:bg-red-500 leaflet-marker"
+                      position={
+                        [
+                          userDetails?.currentLocation?.latitude,
+                          userDetails?.currentLocation?.longitude,
+                        ]
+                      }
+                      icon={markerIcon}
+                    >
+                      <Popup className="">
+                        <div className="flex flex-col w-full">
+                          <div>
+                            <span className="font-bold text-green-500">Name: </span>
+                            <span>{userDetails?.username}</span>
+                          </div>
+                          <div>
+                            <span className="text-green-500">current location:</span>
+                            {' '}
+                            <span>{userDetails?.currentLocation?.name}</span>
+                          </div>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
                 </div>
               </div>
             )

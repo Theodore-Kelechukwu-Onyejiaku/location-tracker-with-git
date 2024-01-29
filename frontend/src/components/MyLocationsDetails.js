@@ -1,5 +1,5 @@
 import {
-  MapContainer, Marker, Popup, TileLayer, Polygon,
+  MapContainer, Marker, Popup, TileLayer, Polygon
 } from 'react-leaflet';
 import Leaflet from 'leaflet';
 import { useEffect, useState } from 'react';
@@ -21,6 +21,10 @@ export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
 
   // create state variables
   const [locations, setLocations] = useState([]);
+  const [coordinates, setCoordinates] = useState([]);
+
+  // create polygon color
+  const polygonColor = { color: "blue" }
 
   // function to handle the deletion of a user's location
   const handleDeleteLocation = async (locationToDelete) => {
@@ -49,6 +53,10 @@ export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
       // update the locations state variable
       setLocations(updatedLocations);
 
+      // update the coordinates
+      const updatedCoodinates = updatedLocations.map((location) => [location.latitude, location.longitude]);
+      setCoordinates(updatedCoodinates);
+
       // display success message
       toast.success('Location deleted successfully!');
     } catch (error) {
@@ -57,11 +65,24 @@ export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
     }
   };
 
+  // create custom marker
+  const markerIcon = new Leaflet.Icon({
+    iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon-2x.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
 
   useEffect(() => {
     const userLocations = authUser?.locations || [];
     const initializeLocations = () => {
       setLocations(userLocations);
+
+      // set coordinates
+      const coordinates = userLocations?.map((location) => [location?.latitude, location?.longitude]);
+      setCoordinates(coordinates);
     };
 
     initializeLocations();
@@ -70,6 +91,42 @@ export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
   return <div className="text-black dark:text-white p-3 lg:p-10">
     <div className="h-1/2">
       <p className="my-3 lg:my-7">Places you have visited and your coverage</p>
+      <div className="relative">
+        <div className="absolute z-50 right-0 flex">
+          <button
+            type="button"
+            onClick={() => { getCsvData('locations'); }}
+          >
+            <FaFileCsv size={24} />
+          </button>
+        </div>
+        <MapContainer id="myLocationsMap" placeholder center={[51.505, -0.09]} zoom={2} scrollWheelZoom={false} className="h-[300px] bg-black w-auto z-40 leaflet-container">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {
+            locations?.length
+              ? locations?.map((location) => (
+                <Marker
+                  className="leaflet-marker-icon"
+                  key={location?._id}
+                  position={
+                    [
+                      location?.latitude,
+                      location?.longitude,
+                    ]
+                  }
+                  icon={markerIcon}
+                >
+                  <Popup>{location?.name}</Popup>
+                </Marker>
+              ))
+              : null
+          }
+          <Polygon pathOptions={polygonColor} positions={coordinates} />
+        </MapContainer>
+      </div>
     </div>
     <div className="h-1/2">
       <p className="my-3 lg:my-7">Edit or delete a place you have visited from the map!</p>

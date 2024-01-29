@@ -57,7 +57,7 @@ export default function Profile() {
           <Link to="/my-friends" className="primary-button w-full flex justify-between items-center sm:w-[150px] shadow-md rounded-md border border-green-500  p-5 text-sm">
             <span>Friends: </span>
             <span className="text-green-500">
-              {/* Number of friends here */}
+              {authUser?.friends?.length}
             </span>
             <BsArrowUpRight className="text-green-500" />
           </Link>

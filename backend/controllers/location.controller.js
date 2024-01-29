@@ -154,4 +154,32 @@ exports.getUser = async (req, res) => {
     }
 };
 
-exports.getLocationCsvData = async (req, res) => { }
+exports.getLocationCsvData = async (req, res) => {
+    try {
+        // retrieve User and Locations:
+        const { _id } = req.user;
+        const user = await User.findById(_id);
+        const { locations } = user;
+
+        // format location data for CSV:
+        const formattedData = locations.map((location) => ({
+            Name: location.name,
+            Latitude: location.latitude,
+            Longitude: location.longitude,
+        }));
+
+        // generate CSV String:
+        const csv = parser.unparse(formattedData, {
+            header: true,
+        });
+
+        // Set Response Headers and Send CSV:
+        res.header('Content-Type', 'text/csv');
+        res.status(200).send(csv);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+            data: null,
+        });
+    }
+};
