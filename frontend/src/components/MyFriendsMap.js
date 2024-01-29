@@ -12,6 +12,7 @@ import serverURL from "../utils/urls";
 import useAuth from "../hooks/useAuth";
 import getCsvData from "../utils/csv";
 import downloadMap from "../utils/downloadmap";
+import DownloadMap from "../utils/downloadmap";
 
 export default function MyFriendsMap() {
   // get the authenticated user
@@ -92,12 +93,19 @@ export default function MyFriendsMap() {
           <div className="absolute z-50 right-0 flex">
             <button
               type="button"
+              onClick={() => { downloadMap('friendsMap'); }}
+            >
+              <FaFileDownload size={24} />
+            </button>
+            <button
+              type="button"
               onClick={() => { getCsvData('friends'); }}
             >
               <FaFileCsv size={24} />
             </button>
           </div>
           <MapContainer id="friendsMap" placeholder center={[6.5244, 3.3792]} zoom={1} scrollWheelZoom={false} className="h-[300px] bg-black w-auto z-40 leaflet-container">
+            <DownloadMap position="topleft" sizeModes={['Current', 'A4Portrait', 'A4Landscape']} hideControlContainer={false} title="Export as PNG" exportOnly />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

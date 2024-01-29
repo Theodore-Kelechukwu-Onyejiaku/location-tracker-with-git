@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaCircleInfo, FaLocationDot } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
 import serverURL from '../utils/urls';
 import AppContext from '../utils/AppContext';

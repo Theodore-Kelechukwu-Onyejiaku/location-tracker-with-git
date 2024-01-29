@@ -4,7 +4,7 @@ import {
 import Leaflet from 'leaflet';
 import { useEffect, useState } from 'react';
 import {
-  FaFileCsv, FaTrash, FaFileDownload, FaEdit,
+  FaFileCsv, FaTrash, FaEdit,
 } from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import axios from 'axios';
@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import serverURL from '../utils/urls';
 import getCsvData from '../utils/csv';
 import useAuth from '../hooks/useAuth';
-import downloadMap from '../utils/downloadmap';
+import DownloadMap from '../utils/downloadmap';
 
 export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
   // get authenticated user from custom hook effect
@@ -101,6 +101,7 @@ export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
           </button>
         </div>
         <MapContainer id="myLocationsMap" placeholder center={[51.505, -0.09]} zoom={2} scrollWheelZoom={false} className="h-[300px] bg-black w-auto z-40 leaflet-container">
+          <DownloadMap position="topleft" sizeModes={['Current', 'A4Portrait', 'A4Landscape']} hideControlContainer={false} title="Export as PNG" exportOnly />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
