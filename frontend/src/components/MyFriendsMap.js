@@ -12,6 +12,7 @@ import serverURL from "../utils/urls";
 import useAuth from "../hooks/useAuth";
 import getCsvData from "../utils/csv";
 import downloadMap from "../utils/downloadmap";
+import DownloadMap from "../utils/downloadmap";
 
 export default function MyFriendsMap() {
   return <div>MyFriendsMap</div>;
