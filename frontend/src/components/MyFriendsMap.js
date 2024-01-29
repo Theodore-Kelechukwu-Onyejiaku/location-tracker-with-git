@@ -7,11 +7,10 @@ import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import Leaflet from "leaflet";
 import { toast } from "react-toastify";
-import { FaFileCsv, FaFileDownload } from "react-icons/fa";
+import { FaFileCsv } from "react-icons/fa";
 import serverURL from "../utils/urls";
 import useAuth from "../hooks/useAuth";
 import getCsvData from "../utils/csv";
-import downloadMap from "../utils/downloadmap";
 import DownloadMap from "../utils/downloadmap";
 
 export default function MyFriendsMap() {
